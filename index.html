@@ -1,10 +1,189 @@
 <!DOCTYPE html>
 <html>
+<meta charset="UTF-8">
 <head>
 	<title>BlackJack</title>
 	<link rel="stylesheet" type="text/css" href="./css/style.css" />
 </head>
 <body>
 
+<table class="playboard">
+	<tr class="first header">
+		<td>
+			<div class="gameName">blackJack</div>
+			<div class="gameAuthor">by GhostDolphin</div>
+		</td>
+	</tr>
+	<tr class="panel">
+		<td>
+			<table class="info">
+				<tr class="labels">
+					<td>Your Score:</td>
+					<td>Dealer's Score:</td>
+					<td>Your Money:</td>
+				</tr>
+				<tr class="values">
+					<td class="score">0</td>
+					<td class="dealer">0</td>
+					<td class="balance">$1000</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr class="first game">
+		<td>
+			<!-- <div class="playButton">play</div> -->
+			<div class="dealerCards">
+				<!-- <table class="card spade num9">
+					<tr class="up num">
+						<td>
+							<span></span>
+						</td>
+					</tr>
+					<tr class="up suit">
+						<td>
+							<span></span>
+						</td>
+					</tr>
+					<tr class="mid">
+						<td></td>
+					</tr>
+					<tr class="down suit">
+						<td>
+							<span></span>
+						</td>
+					</tr>
+					<tr class="down num">
+						<td>
+							<span></span>
+						</td>
+					</tr>
+				</table>
+				<table class="card hidden">
+					<tr class="up num">
+						<td>
+							<span></span>
+						</td>
+					</tr>
+					<tr class="up suit">
+						<td>
+							<span></span>
+						</td>
+					</tr>
+					<tr class="mid">
+						<td></td>
+					</tr>
+					<tr class="down suit">
+						<td>
+							<span></span>
+						</td>
+					</tr>
+					<tr class="down num">
+						<td>
+							<span></span>
+						</td>
+					</tr>
+				</table> -->
+			</div>
+			<div class="currentBid">
+				<div class="chip">
+					<div class="sum">$0</div>
+				</div>
+			</div>
+			<div class="playerCards">
+				<!-- <table class="card club numK">
+					<tr class="up num">
+						<td>
+							<span></span>
+						</td>
+					</tr>
+					<tr class="up suit">
+						<td>
+							<span></span>
+						</td>
+					</tr>
+					<tr class="mid">
+						<td></td>
+					</tr>
+					<tr class="down suit">
+						<td>
+							<span></span>
+						</td>
+					</tr>
+					<tr class="down num">
+						<td>
+							<span></span>
+						</td>
+					</tr>
+				</table>
+				<table class="card spade numA">
+					<tr class="up num">
+						<td>
+							<span></span>
+						</td>
+					</tr>
+					<tr class="up suit">
+						<td>
+							<span></span>
+						</td>
+					</tr>
+					<tr class="mid">
+						<td></td>
+					</tr>
+					<tr class="down suit">
+						<td>
+							<span></span>
+						</td>
+					</tr>
+					<tr class="down num">
+						<td>
+							<span></span>
+						</td>
+					</tr>
+				</table>
+				<table class="card spade numA">
+					<tr class="up num">
+						<td>
+							<span></span>
+						</td>
+					</tr>
+					<tr class="up suit">
+						<td>
+							<span></span>
+						</td>
+					</tr>
+					<tr class="mid">
+						<td></td>
+					</tr>
+					<tr class="down suit">
+						<td>
+							<span></span>
+						</td>
+					</tr>
+					<tr class="down num">
+						<td>
+							<span></span>
+						</td>
+					</tr>
+				</table> -->
+			</div>
+		</td>
+	</tr>
+	<tr class="buttons">
+		<td>
+			<div class="button hidden" id="hit">
+				Hit
+			</div>
+			<div class="button" id="stand">
+				Bid $100
+			</div>
+			<div class="button hidden" id="stand">
+				Stand
+			</div>
+		</td>
+	</tr>
+</table>
+
 </body>
+<script type="text/javascript" src="./js/core.js"></script>
 </html>
