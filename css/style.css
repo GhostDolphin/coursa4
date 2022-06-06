@@ -202,87 +202,67 @@ div.chip > div.sum {
 
 
 
-table.card.heart tr.suit span:before, table.card.heart tr.mid td:before {
+table.card tr span:before, table.card tr.mid td:before {
 	display: inline-block;
+}
+
+table.card.heart tr.suit span:before, table.card.heart tr.mid td:before {
 	content: "♥";
 }
 table.card.diamond tr.suit span:before, table.card.diamond tr.mid td:before {
-	display: inline-block;
 	content: "♦";
 }
 table.card.spade tr.suit span:before, table.card.spade tr.mid td:before {
-	display: inline-block;
 	content: "♠";
 }
 table.card.club tr.suit span:before, table.card.club tr.mid td:before {
-	display: inline-block;
 	content: "♣";
 }
 
 table.card.num2 tr.num span:before {
-	display: inline-block;
 	content: "2";
 }
 table.card.num3 tr.num span:before {
-	display: inline-block;
 	content: "3";
 }
 table.card.num4 tr.num span:before {
-	display: inline-block;
 	content: "4";
 }
 table.card.num5 tr.num span:before {
-	display: inline-block;
 	content: "5";
 }
 table.card.num6 tr.num span:before {
-	display: inline-block;
 	content: "6";
 }
 table.card.num7 tr.num span:before {
-	display: inline-block;
 	content: "7";
 }
 table.card.num8 tr.num span:before {
-	display: inline-block;
 	content: "8";
 }
 table.card.num9 tr.num span:before {
-	display: inline-block;
 	content: "9";
 }
 table.card.num10 tr.num span:before {
-	display: inline-block;
 	content: "10";
 }
 table.card.numJ tr.num span:before {
-	display: inline-block;
 	content: "J";
 }
 table.card.numQ tr.num span:before {
-	display: inline-block;
 	content: "Q";
 }
 table.card.numK tr.num span:before {
-	display: inline-block;
 	content: "K";
 }
 table.card.numA tr.num span:before {
-	display: inline-block;
 	content: "A";
 }
 
-table.card.hidden tr.suit span:before {
-	display: inline-block;
+table.card.hidden tr.suit span:before, table.card.hidden tr.num span:before {
 	content: " ";
 }
 
 table.card.hidden tr.mid td:before {
-	display: inline-block;
 	content: "?";
-}
-
-table.card.hidden tr.num span:before {
-	display: inline-block;
-	content: " ";
 }
