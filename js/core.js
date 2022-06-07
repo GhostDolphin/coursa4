@@ -30,3 +30,5 @@ const shuffle = (cards) => {
 	}
 	return deck;
 };
+
+const parseCardClass = (isHidden, card) => isHidden ? ` hidden` : ` ${card.suit} num${card.value}`;
