@@ -132,6 +132,60 @@ const countScore = (cards) => {
 	return score;
 };
 
+const hit = (deck, playerCards) => {
+	const result = {
+		leftInDeck: deck,
+		cards: playerCards
+	};
+
+	const card = result.leftInDeck.splice(0, 1)[0],
+	newCard = document.createElement('table'),
+	className = 'card' + parseCardClass(false, card),
+	idOfCard = `card_player_${result.cards.length}`;
+
+	card.id = idOfCard;
+	result.cards.push(card);
+
+	newCard.id = idOfCard;
+	newCard.className += className;
+	newCard.innerHTML = CARD_TEMPLATE;
+
+	findClass('playerCards')[0].appendChild(newCard);
+
+	setTimeout(() => {
+		findId(newCard.id).style.transform = 'scale(1)';
+	}, 100);
+
+	return result;
+};
+
+const stand = (deck, dealerCards) => {
+	const result = {
+		leftInDeck: deck,
+		cards: dealerCards
+	};
+
+	const card = result.leftInDeck.splice(0, 1)[0],
+	newCard = document.createElement('table'),
+	className = 'card' + parseCardClass(false, card),
+	idOfCard = `card_dealer_${result.cards.length}`;
+
+	card.id = idOfCard;
+	result.cards.push(card);
+
+	newCard.id = idOfCard;
+	newCard.className += className;
+	newCard.innerHTML = CARD_TEMPLATE;
+
+	findClass('dealerCards')[0].appendChild(newCard);
+
+	setTimeout(() => {
+		findId(newCard.id).style.transform = 'scale(1)';
+	}, 100);
+
+	return result;
+};
+
 const playerLost = () => {
 	findId('hit').classList.add('hidden');
 	findId('stand').classList.add('hidden');
