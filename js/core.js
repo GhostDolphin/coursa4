@@ -186,6 +186,15 @@ const stand = (deck, dealerCards) => {
 	return result;
 };
 
+const showHidden = (cards) => {
+	const cardId = findClass('hidden')[0].id,
+	hiddenCard = cards.filter((card) => card.id === cardId)[0],
+	className = parseCardClass(false, hiddenCard);
+
+	findId(cardId).classList.remove('hidden');
+	findId(cardId).className += className;
+};
+
 const playerLost = () => {
 	findId('hit').classList.add('hidden');
 	findId('stand').classList.add('hidden');
@@ -207,4 +216,17 @@ const draw = () => {
 	findId('player_score').classList.remove('lost');
 	findId('dealer_score').classList.remove('won');
 	findId('dealer_score').classList.remove('lost');
+};
+
+const checkMoney = (money) => {
+	if (money < 1000) {
+		findId('player_money').classList.remove('won');
+		findId('player_money').classList.add('lost');
+	} else if (money === 1000) {
+		findId('player_money').classList.remove('lost');
+		findId('player_money').classList.remove('won');
+	} else if (money > 1000) {
+		findId('player_money').classList.remove('lost');
+		findId('player_money').classList.add('won');
+	}
 };
