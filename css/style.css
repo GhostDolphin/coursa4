@@ -1,0 +1,24 @@
+@font-face {
+	font-family: 'FuturaBook';
+	src: url('./fonts/FuturaBook.ttf');
+}
+@font-face {
+	font-family: 'FuturaHeavy';
+	src: url('./fonts/FuturaHeavy.ttf');
+}
+
+html {
+	height: 100%;
+}
+
+body {
+	min-height: 99%;
+	user-select: none;
+	-webkit-user-drag: none;
+	background-image: url('../img/bg.jpg');
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: 50% 50%;
+	font-family: 'FuturaBook';
+	color: #fff;
+}

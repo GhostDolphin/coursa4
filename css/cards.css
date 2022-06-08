@@ -1,0 +1,56 @@
+table.card {
+	display: inline-table;
+	background-color: rgba(255, 255, 255, 0.1);
+	aspect-ratio: 2.5 / 3.5;
+	border-radius: 0.5vw;
+	backdrop-filter: blur(5px);
+	transition: all 0.25s ease-in-out;
+	transform: scale(0);
+}
+table.card tr {
+	height: 10%;
+}
+table.card tr.mid {
+	height: 60%;
+}
+table.card tr.up {
+	text-align: left;
+}
+table.card tr.up span {
+	margin-left: 0.15vw;
+}
+table.card tr.down {
+	text-align: right;
+}
+table.card tr.down span {
+	display: inline-block;
+	transform: rotate(180deg);
+	margin-right: 0.15vw;
+}
+
+
+div.dealerCards table.card {
+	width: 5vw;
+	min-width: 100px;
+	box-shadow: #fff 0 0 0 0.075vw, #fff 0 0 0.25vw 0.075vw;
+	text-shadow: #fff 0 0 0.25vw;
+	font-size: 18px;
+	margin-right: 0.25vw;
+	margin-left: 0.25vw;
+}
+div.dealerCards table.card tr.mid {
+	font-size: 36px;
+}
+
+div.playerCards table.card {
+	width: 9vw;
+	min-width: 200px;
+	box-shadow: #fff 0 0 0 0.15vw, #fff 0 0 0.25vw 0.15vw;
+	text-shadow: #fff 0 0 0.25vw;
+	font-size: 24px;
+	margin-right: 0.5vw;
+	margin-left: 0.5vw;
+}
+div.playerCards table.card tr.mid {
+	font-size: 64px;
+}
