@@ -86,3 +86,47 @@ const startGame = (deck, stats) => {
 
 	return result;
 };
+
+const countScore = (cards) => {
+	let score = 0;
+
+	const defVal = (checkCard) => {
+		if (typeof checkCard.value !== 'number')
+			if (checkCard.value === 'A')
+				return 11;
+			else
+				return 10;
+		else
+			return checkCard.value;
+	};
+
+	const countAces = (deck) => {
+		const aces = [];
+
+		for (const ace of deck) {
+			if (ace.value === 'A')
+				aces.push(ace);
+		}
+
+		return aces;
+	};
+
+	for (const card of cards) {
+		const val = defVal(card);
+
+		score += val;
+	}
+
+	let aces = countAces(cards);
+
+	if (aces.length > 0) {
+		let n = 0;
+
+		while (score > 21 && n < aces.length) {
+			n++;
+			score -= 10;
+		}
+	}
+
+	return score;
+};
