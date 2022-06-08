@@ -91,13 +91,14 @@ const countScore = (cards) => {
 	let score = 0;
 
 	const defVal = (checkCard) => {
-		if (typeof checkCard.value !== 'number')
+		if (typeof checkCard.value !== 'number') {
 			if (checkCard.value === 'A')
 				return 11;
 			else
 				return 10;
-		else
+		} else {
 			return checkCard.value;
+		}
 	};
 
 	const countAces = (deck) => {
