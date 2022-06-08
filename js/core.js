@@ -5,6 +5,21 @@ const ALWAYS_FIRST = {
 	playerCards: ['card_player_0', 'card_player_1']
 };
 
+const curStats = {
+	player: {
+		score: 0,
+		money: 1000
+	},
+	dealer: {
+		score: 0
+	}
+};
+
+let bidClicked = false,
+continueGame = false,
+firstDone = false,
+values;
+
 const getRandom = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
 
 const defCards = () => {
