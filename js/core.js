@@ -54,7 +54,7 @@ const shuffle = (cards) => {
 const parseCardClass = (isHidden, card) => isHidden ? ` hidden` : ` ${card.suit} num${card.value}`;
 
 const startGame = (deck, stats) => {
-	const values = {
+	const result = {
 		leftInDeck: deck,
 		table: {
 			player: [],
@@ -65,18 +65,21 @@ const startGame = (deck, stats) => {
 
 
 	for (let i = 0; i < 2; i++) {
-		for (const side in values.table) {
-			values.counter++;
-			values.table[side].push(...values.leftInDeck.splice(0, 1));
-			const newCard = document.getElementById(`card_${side}_${i}`),
-			className = parseCardClass((i === 1) && (side === 'dealer') ? true : false, values.table[side][i]);
+		for (const side in result.table) {
+			result.counter++;
+			result.table[side].push(...result.leftInDeck.splice(0, 1));
+			result.table[side][result.table[side].length - 1].id = `card_${side}_${i}`;
+
+			const newCard = findId(`card_${side}_${i}`),
+			className = parseCardClass((i === 1) && (side === 'dealer') ? true : false, result.table[side][i]);
+
 			newCard.className += className;
+
 			setTimeout(() => {
-				document.getElementById(newCard.id).style.transform = 'scale(1)';
-			}, 1000 * values.counter);
+				findId(newCard.id).style.transform = 'scale(1)';
+			}, 1000 * result.counter);
 		}
 	}
 
-	document.getElementById('chip').innerHTML = '$100';
-	return values;
+	return result;
 };
