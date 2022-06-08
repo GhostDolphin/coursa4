@@ -1,5 +1,10 @@
 const CARD_TEMPLATE = `<tr class="up num"><td><span></span></td></tr><tr class="up suit"><td><span></span></td></tr><tr class="mid"><td></td></tr><tr class="down suit"><td><span></span></td></tr><tr class="down num"><td><span></span></td></tr>`;
 
+const ALWAYS_FIRST = {
+	dealerCards: ['card_dealer_0', 'card_dealer_1'],
+	playerCards: ['card_player_0', 'card_player_1']
+};
+
 const getRandom = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
 
 const defCards = () => {
