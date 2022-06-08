@@ -21,4 +21,5 @@ body {
 	background-position: 50% 50%;
 	font-family: 'FuturaBook';
 	color: #fff;
+	overflow: hidden;
 }
