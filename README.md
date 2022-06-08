@@ -14,4 +14,6 @@
 - Defence from dealer's blackjack (score of 21 with only 2 cards) is absent;
 - ... and all the other things I simply missed while researching on how the game works
 
+[!] I've used free-hosting for easier experience: http://d-ch-simulated-bjack.zzz.com.ua
+
 Background source: https://www.pngmagic.com/w87b/website-background-image-size-psd-vector-photo.htm
