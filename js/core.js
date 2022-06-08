@@ -131,3 +131,26 @@ const countScore = (cards) => {
 
 	return score;
 };
+
+const playerLost = () => {
+	findId('hit').classList.add('hidden');
+	findId('stand').classList.add('hidden');
+	findId('player_score').classList.add('lost');
+	findId('dealer_score').classList.add('won');
+};
+
+const playerWon = () => {
+	findId('hit').classList.add('hidden');
+	findId('stand').classList.add('hidden');
+	findId('player_score').classList.add('won');
+	findId('dealer_score').classList.add('lost');
+};
+
+const draw = () => {
+	findId('hit').classList.add('hidden');
+	findId('stand').classList.add('hidden');
+	findId('player_score').classList.remove('won');
+	findId('player_score').classList.remove('lost');
+	findId('dealer_score').classList.remove('won');
+	findId('dealer_score').classList.remove('lost');
+};
