@@ -230,3 +230,148 @@ const checkMoney = (money) => {
 		findId('player_money').classList.add('won');
 	}
 };
+
+findId('bid').addEventListener('click', () => {
+	if (!bidClicked && curStats.player.money > 0) {
+		bidClicked = true;
+		findId('bid').classList.add('hidden');
+		findId('player_score').classList.remove('won');
+		findId('player_score').classList.remove('lost');
+		findId('dealer_score').classList.remove('won');
+		findId('dealer_score').classList.remove('lost');
+
+		const cardsAll = defCards(),
+		curDeck = shuffle(cardsAll);
+
+		if (continueGame) {
+			findId('dealer_cards').innerHTML = '';
+			findId('player_cards').innerHTML = '';
+			findId('player_score').innerHTML = 0;
+			findId('dealer_score').innerHTML = 0;
+
+			for (const side in ALWAYS_FIRST) {
+				for (const idOfFirst of ALWAYS_FIRST[side]) {
+					const newCard = document.createElement('table');
+
+					newCard.id = idOfFirst;
+					newCard.className = 'card';
+					newCard.innerHTML = CARD_TEMPLATE;
+
+					findClass(side)[0].appendChild(newCard);
+				}
+			}
+		}
+
+		values = startGame(curDeck, curStats);
+
+		curStats.player.score = countScore(values.table.player);
+		curStats.player.money -= 100;
+		findId('chip').innerHTML = '$100';
+		findId('player_money').innerHTML = `$${curStats.player.money}`;
+		checkMoney(curStats.player.money);
+
+		curStats.dealer.score = countScore(values.table.dealer);
+
+		setTimeout(() => {
+			findId('player_score').innerHTML = curStats.player.score;
+			findId('dealer_score').innerHTML = '?';
+
+			findId('hit').classList.remove('hidden');
+			findId('stand').classList.remove('hidden');
+
+			firstDone = true;
+		}, (1000 * values.counter) + 500);
+	}
+});
+
+findId('hit').addEventListener('click', () => {
+	if (firstDone) {
+		const result = hit(values.leftInDeck, values.table.player);
+
+		curStats.player.score = countScore(result.cards);
+
+		setTimeout(() => {
+			findId('player_score').innerHTML = curStats.player.score;
+
+			if (curStats.player.score > 21) {
+				showHidden(values.table.dealer);
+				playerLost();
+
+				findId('dealer_score').innerHTML = curStats.dealer.score;
+
+				firstDone = false;
+
+				if (curStats.player.money > 0) {
+					findId('bid').classList.remove('hidden');
+					continueGame = true;
+					bidClicked = false;
+				}
+			}
+		}, 100);
+	}
+});
+
+findId('stand').addEventListener('click', () => {
+	if (firstDone) {
+		firstDone = false;
+		setTimeout(() => {
+			showHidden(values.table.dealer);
+			findId('dealer_score').innerHTML = curStats.dealer.score;
+
+			let count,
+			result;
+
+			while (curStats.dealer.score < 17) {
+				count++;
+				result = stand(values.leftInDeck, values.table.dealer);
+				curStats.dealer.score = countScore(result.cards);
+				findId('dealer_score').innerHTML = curStats.dealer.score;
+			}
+			
+			if (curStats.dealer.score > 21) {
+				playerWon();
+
+				curStats.player.money += 200;
+				findId('player_money').innerHTML = `$${curStats.player.money}`;
+				checkMoney(curStats.player.money);
+
+				findId('bid').classList.remove('hidden');
+				continueGame = true;
+				bidClicked = false;
+			} else if (curStats.dealer.score > curStats.player.score) {
+				playerLost();
+
+				if (curStats.player.money > 0) {
+					findId('bid').classList.remove('hidden');
+					continueGame = true;
+					bidClicked = false;
+				}
+			} else if (curStats.dealer.score < curStats.player.score) {
+				playerWon();
+
+				if (curStats.player.score === 21 && values.table.player.length === 2)
+					curStats.player.money += 300;
+				else
+					curStats.player.money += 200;
+
+				findId('player_money').innerHTML = `$${curStats.player.money}`;
+				checkMoney(curStats.player.money);
+
+				findId('bid').classList.remove('hidden');
+				continueGame = true;
+				bidClicked = false;
+			} else if (curStats.dealer.score === curStats.player.score) {
+				draw();
+
+				curStats.player.money += 100;
+				findId('player_money').innerHTML = `$${curStats.player.money}`;
+
+				checkMoney(curStats.player.money);
+
+				findId('bid').classList.remove('hidden');
+				continueGame = true;
+				bidClicked = false;
+			}
+		}, 100);
+	}
+});
