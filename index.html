@@ -23,18 +23,17 @@
 					<td>Your Money:</td>
 				</tr>
 				<tr class="values">
-					<td class="score">0</td>
-					<td class="dealer">0</td>
-					<td class="balance">$1000</td>
+					<td id="player_score" class="score">0</td>
+					<td id="dealer_score" class="dealer">0</td>
+					<td id="player_money" class="balance">$1000</td>
 				</tr>
 			</table>
 		</td>
 	</tr>
 	<tr class="first game">
 		<td>
-			<!-- <div class="playButton">play</div> -->
-			<div class="dealerCards">
-				<!-- <table class="card spade num9">
+			<div class="dealerCards" id="dealer_cards">
+				<table id="card_dealer_0" class="card">
 					<tr class="up num">
 						<td>
 							<span></span>
@@ -59,7 +58,7 @@
 						</td>
 					</tr>
 				</table>
-				<table class="card hidden">
+				<table id="card_dealer_1" class="card">
 					<tr class="up num">
 						<td>
 							<span></span>
@@ -83,15 +82,15 @@
 							<span></span>
 						</td>
 					</tr>
-				</table> -->
+				</table>
 			</div>
 			<div class="currentBid">
 				<div class="chip">
-					<div class="sum">$0</div>
+					<div id="chip" class="sum">$0</div>
 				</div>
 			</div>
-			<div class="playerCards">
-				<!-- <table class="card club numK">
+			<div class="playerCards" id="player_cards">
+				<table id="card_player_0" class="card">
 					<tr class="up num">
 						<td>
 							<span></span>
@@ -116,7 +115,7 @@
 						</td>
 					</tr>
 				</table>
-				<table class="card spade numA">
+				<table id="card_player_1" class="card">
 					<tr class="up num">
 						<td>
 							<span></span>
@@ -141,31 +140,6 @@
 						</td>
 					</tr>
 				</table>
-				<table class="card spade numA">
-					<tr class="up num">
-						<td>
-							<span></span>
-						</td>
-					</tr>
-					<tr class="up suit">
-						<td>
-							<span></span>
-						</td>
-					</tr>
-					<tr class="mid">
-						<td></td>
-					</tr>
-					<tr class="down suit">
-						<td>
-							<span></span>
-						</td>
-					</tr>
-					<tr class="down num">
-						<td>
-							<span></span>
-						</td>
-					</tr>
-				</table> -->
 			</div>
 		</td>
 	</tr>
@@ -174,7 +148,7 @@
 			<div class="button hidden" id="hit">
 				Hit
 			</div>
-			<div class="button" id="stand">
+			<div class="button" id="bid">
 				Bid $100
 			</div>
 			<div class="button hidden" id="stand">
