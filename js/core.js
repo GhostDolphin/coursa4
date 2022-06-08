@@ -51,6 +51,9 @@ const shuffle = (cards) => {
 	return deck;
 };
 
+const findId = (id) => document.getElementById(id);
+const findClass = (className) => document.getElementsByClassName(className);
+
 const parseCardClass = (isHidden, card) => isHidden ? ` hidden` : ` ${card.suit} num${card.value}`;
 
 const startGame = (deck, stats) => {
