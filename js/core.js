@@ -20,6 +20,10 @@ continueGame = false,
 firstDone = false,
 values;
 
+
+
+// CONVENIENCE FUNCTIONS \\
+
 const getRandom = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
 
 const defCards = () => {
@@ -55,6 +59,10 @@ const findId = (id) => document.getElementById(id);
 const findClass = (className) => document.getElementsByClassName(className);
 
 const parseCardClass = (isHidden, card) => isHidden ? ` hidden` : ` ${card.suit} num${card.value}`;
+
+
+
+// BASIC FUNCTIONS \\
 
 const startGame = (deck, stats) => {
 	const result = {
@@ -186,6 +194,10 @@ const stand = (deck, dealerCards) => {
 	return result;
 };
 
+
+
+// DOM-OPERATING FUNCTIONS \\
+
 const showHidden = (cards) => {
 	const cardId = findClass('hidden')[0].id,
 	hiddenCard = cards.filter((card) => card.id === cardId)[0],
@@ -230,6 +242,10 @@ const checkMoney = (money) => {
 		findId('player_money').classList.add('won');
 	}
 };
+
+
+
+// EVENTS \\
 
 findId('bid').addEventListener('click', () => {
 	if (!bidClicked && curStats.player.money > 0) {
