@@ -128,7 +128,7 @@ const countScore = (cards) => {
 		score += val;
 	}
 
-	let aces = countAces(cards);
+	const aces = countAces(cards);
 
 	if (aces.length > 0) {
 		let n = 0;
