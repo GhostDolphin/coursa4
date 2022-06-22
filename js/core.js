@@ -41,7 +41,7 @@ const defCards = () => {
 	return cards;
 };
 
-const shuffle = (cards) => cards.sort(() => Math.random() > 0.5 ? 1 : -1);
+const shuffle = cards => cards.sort(() => Math.random() > 0.5 ? 1 : -1);
 
 const parseCardClass = (isHidden, card) => isHidden ? ` hidden` : ` ${card.suit} num${card.value}`;
 
@@ -80,10 +80,10 @@ const startGame = (deck, stats) => {
 	return result;
 };
 
-const countScore = (cards) => {
+const countScore = cards => {
 	let score = 0;
 
-	const defVal = (checkCard) => {
+	const defVal = checkCard => {
 		if (typeof checkCard.value !== 'number') {
 			if (checkCard.value === 'A')
 				return 11;
@@ -94,24 +94,13 @@ const countScore = (cards) => {
 		}
 	};
 
-	const countAces = (deck) => {
-		const aces = [];
-
-		for (const ace of deck) {
-			if (ace.value === 'A')
-				aces.push(ace);
-		}
-
-		return aces;
-	};
-
 	for (const card of cards) {
 		const val = defVal(card);
 
 		score += val;
 	}
 
-	let aces = countAces(cards);
+	const aces = cards.filter(ace => ace.value === 'A');
 
 	if (aces.length > 0) {
 		let n = 0;
@@ -125,16 +114,16 @@ const countScore = (cards) => {
 	return score;
 };
 
-const hit = (deck, playerCards) => {
+const action = (deck, cards, section) => {
 	const result = {
 		leftInDeck: deck,
-		cards: playerCards
+		cards: cards
 	};
 
 	const card = result.leftInDeck.splice(0, 1)[0],
 	newCard = document.createElement('table'),
 	className = 'card' + parseCardClass(false, card),
-	idOfCard = `card_player_${result.cards.length}`;
+	idOfCard = `card_${section}_${result.cards.length}`;
 
 	card.id = idOfCard;
 	result.cards.push(card);
@@ -143,37 +132,10 @@ const hit = (deck, playerCards) => {
 	newCard.className += className;
 	newCard.innerHTML = CARD_TEMPLATE;
 
-	document.getElementsByClassName('playerCards')[0].appendChild(newCard);
+	document.getElementsByClassName(`${section}Cards`)[0].appendChild(newCard);
 
 	setTimeout(() => {
-		document.getElementById(newCard.id).style.transform = 'scale(1)';
-	}, 100);
-
-	return result;
-};
-
-const stand = (deck, dealerCards) => {
-	const result = {
-		leftInDeck: deck,
-		cards: dealerCards
-	};
-
-	const card = result.leftInDeck.splice(0, 1)[0],
-	newCard = document.createElement('table'),
-	className = 'card' + parseCardClass(false, card),
-	idOfCard = `card_dealer_${result.cards.length}`;
-
-	card.id = idOfCard;
-	result.cards.push(card);
-
-	newCard.id = idOfCard;
-	newCard.className += className;
-	newCard.innerHTML = CARD_TEMPLATE;
-
-	document.getElementsByClassName('dealerCards')[0].appendChild(newCard);
-
-	setTimeout(() => {
-		document.getElementById(newCard.id).style.transform = 'scale(1)';
+		newCard.style.transform = 'scale(1)';
 	}, 100);
 
 	return result;
@@ -183,7 +145,7 @@ const stand = (deck, dealerCards) => {
 
 // DOM-OPERATING FUNCTIONS \\
 
-const showHidden = (cards) => {
+const showHidden = cards => {
 	const cardId = document.getElementsByClassName('hidden')[0].id,
 	hiddenCard = cards.filter((card) => card.id === cardId)[0],
 	className = parseCardClass(false, hiddenCard);
@@ -215,7 +177,7 @@ const draw = () => {
 	document.getElementById('dealer_score').classList.remove('lost');
 };
 
-const checkMoney = (money) => {
+const checkMoney = money => {
 	if (money < 1000) {
 		document.getElementById('player_money').classList.remove('won');
 		document.getElementById('player_money').classList.add('lost');
@@ -287,7 +249,7 @@ document.getElementById('bid').addEventListener('click', () => {
 
 document.getElementById('hit').addEventListener('click', () => {
 	if (firstDone) {
-		const result = hit(values.leftInDeck, values.table.player);
+		const result = action(values.leftInDeck, values.table.player, 'player');
 
 		curStats.player.score = countScore(result.cards);
 
@@ -324,7 +286,7 @@ document.getElementById('stand').addEventListener('click', () => {
 
 			while (curStats.dealer.score < 17) {
 				count++;
-				result = stand(values.leftInDeck, values.table.dealer);
+				result = action(values.leftInDeck, values.table.dealer, 'dealer');
 				curStats.dealer.score = countScore(result.cards);
 				document.getElementById('dealer_score').innerHTML = curStats.dealer.score;
 			}
