@@ -36,7 +36,12 @@ const defCards = () => {
 		'spade',
 		'club'
 	],
-	cards = suits.flatMap(suit => range.map(value => ({suit, value})));
+	costs = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11],
+	cards = suits.flatMap(suit => range.map((value, id) => ({
+		suit,
+		value,
+		cost: costs[id]
+	})));
 
 	return cards;
 };
@@ -81,37 +86,17 @@ const startGame = (deck, stats) => {
 };
 
 const countScore = cards => {
-	let score = 0;
-
-	const defVal = checkCard => {
-		if (typeof checkCard.value !== 'number') {
-			if (checkCard.value === 'A')
-				return 11;
-			else
-				return 10;
-		} else {
-			return checkCard.value;
-		}
-	};
-
-	for (const card of cards) {
-		const val = defVal(card);
-
-		score += val;
-	}
+	const sorted = cards.sort((card) => card.value === 'A' ? 1 : -1);
 
 	const aces = cards.filter(ace => ace.value === 'A');
 
-	if (aces.length > 0) {
-		let n = 0;
+	const result = sorted.reduce((score, card) => {
+		const isMinorAce = card.value === 'A' &&  (score + card.cost) > 21;
+		const cost = isMinorAce ? 1 : card.cost;
+		return score + cost;
+	}, 0);
 
-		while (score > 21 && n < aces.length) {
-			n++;
-			score -= 10;
-		}
-	}
-
-	return score;
+	return result;
 };
 
 const action = (deck, cards, section) => {
@@ -120,11 +105,12 @@ const action = (deck, cards, section) => {
 		cards: cards
 	};
 
-	const card = result.leftInDeck.splice(0, 1)[0],
+	const [card, ...leftInDeckCards] = result.leftInDeck,
 	newCard = document.createElement('table'),
 	className = 'card' + parseCardClass(false, card),
 	idOfCard = `card_${section}_${result.cards.length}`;
 
+	result.leftInDeck = leftInDeckCards;
 	card.id = idOfCard;
 	result.cards.push(card);
 
