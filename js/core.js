@@ -26,6 +26,8 @@ values;
 
 // CONVENIENCE FUNCTIONS \\
 
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 const getRandom = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
 
 const defCards = () => {
@@ -164,15 +166,16 @@ const draw = () => {
 };
 
 const checkMoney = money => {
+	const { classList } = document.getElementById('player_money');
+
 	if (money < 1000) {
-		document.getElementById('player_money').classList.remove('won');
-		document.getElementById('player_money').classList.add('lost');
+		classList.remove('won');
+		classList.add('lost');
 	} else if (money === 1000) {
-		document.getElementById('player_money').classList.remove('lost');
-		document.getElementById('player_money').classList.remove('won');
+		classList.remove('lost', 'won');
 	} else if (money > 1000) {
-		document.getElementById('player_money').classList.remove('lost');
-		document.getElementById('player_money').classList.add('won');
+		classList.remove('lost');
+		classList.add('won');
 	}
 };
 
@@ -180,7 +183,7 @@ const checkMoney = money => {
 
 // EVENTS \\
 
-document.getElementById('bid').addEventListener('click', () => {
+document.getElementById('bid').addEventListener('click', async () => {
 	if (!bidClicked && curStats.player.money > 0) {
 		bidClicked = true;
 		document.getElementById('bid').classList.add('hidden');
@@ -221,106 +224,111 @@ document.getElementById('bid').addEventListener('click', () => {
 
 		curStats.dealer.score = countScore(values.table.dealer);
 
-		setTimeout(() => {
-			document.getElementById('player_score').innerHTML = curStats.player.score;
-			document.getElementById('dealer_score').innerHTML = '?';
+		await delay((1000 * values.counter) + 500);
 
-			document.getElementById('hit').classList.remove('hidden');
-			document.getElementById('stand').classList.remove('hidden');
+		document.getElementById('player_score').innerHTML = curStats.player.score;
+		document.getElementById('dealer_score').innerHTML = '?';
 
-			firstDone = true;
-		}, (1000 * values.counter) + 500);
+		document.getElementById('hit').classList.remove('hidden');
+		document.getElementById('stand').classList.remove('hidden');
+
+		firstDone = true;
 	}
 });
 
-document.getElementById('hit').addEventListener('click', () => {
-	if (firstDone) {
-		const result = action(values.leftInDeck, values.table.player, 'player');
-
-		curStats.player.score = countScore(result.cards);
-
-		setTimeout(() => {
-			document.getElementById('player_score').innerHTML = curStats.player.score;
-
-			if (curStats.player.score > 21) {
-				showHidden(values.table.dealer);
-				playerLost();
-
-				document.getElementById('dealer_score').innerHTML = curStats.dealer.score;
-
-				firstDone = false;
-
-				if (curStats.player.money > 0) {
-					document.getElementById('bid').classList.remove('hidden');
-					continueGame = true;
-					bidClicked = false;
-				}
-			}
-		}, 100);
+document.getElementById('hit').addEventListener('click', async () => {
+	if (!firstDone) {
+		return false;
 	}
-});
 
-document.getElementById('stand').addEventListener('click', () => {
-	if (firstDone) {
+	const result = action(values.leftInDeck, values.table.player, 'player');
+
+	curStats.player.score = countScore(result.cards);
+
+	await delay(100);
+
+	document.getElementById('player_score').innerHTML = curStats.player.score;
+
+	if (curStats.player.score > 21) {
+		showHidden(values.table.dealer);
+		playerLost();
+
+		document.getElementById('dealer_score').innerHTML = curStats.dealer.score;
+
 		firstDone = false;
-		setTimeout(() => {
-			showHidden(values.table.dealer);
-			document.getElementById('dealer_score').innerHTML = curStats.dealer.score;
 
-			let count,
-			result;
+		if (curStats.player.money > 0) {
+			document.getElementById('bid').classList.remove('hidden');
+			continueGame = true;
+			bidClicked = false;
+		}
+	}
+});
 
-			while (curStats.dealer.score < 17) {
-				count++;
-				result = action(values.leftInDeck, values.table.dealer, 'dealer');
-				curStats.dealer.score = countScore(result.cards);
-				document.getElementById('dealer_score').innerHTML = curStats.dealer.score;
-			}
-			
-			if (curStats.dealer.score > 21) {
-				playerWon();
+document.getElementById('stand').addEventListener('click', async () => {
+	if (!firstDone) {
+		return false;
+	}
 
-				curStats.player.money += 200;
-				document.getElementById('player_money').innerHTML = `$${curStats.player.money}`;
-				checkMoney(curStats.player.money);
+	firstDone = false;
+	
+	await delay(100);
 
-				document.getElementById('bid').classList.remove('hidden');
-				continueGame = true;
-				bidClicked = false;
-			} else if (curStats.dealer.score > curStats.player.score) {
-				playerLost();
+	showHidden(values.table.dealer);
+	document.getElementById('dealer_score').innerHTML = curStats.dealer.score;
 
-				if (curStats.player.money > 0) {
-					document.getElementById('bid').classList.remove('hidden');
-					continueGame = true;
-					bidClicked = false;
-				}
-			} else if (curStats.dealer.score < curStats.player.score) {
-				playerWon();
+	let count,
+	result;
 
-				if (curStats.player.score === 21 && values.table.player.length === 2)
-					curStats.player.money += 300;
-				else
-					curStats.player.money += 200;
+	while (curStats.dealer.score < 17) {
+		count++;
+		result = action(values.leftInDeck, values.table.dealer, 'dealer');
+		curStats.dealer.score = countScore(result.cards);
+		document.getElementById('dealer_score').innerHTML = curStats.dealer.score;
+	}
+	
+	if (curStats.dealer.score > 21) {
+		playerWon();
 
-				document.getElementById('player_money').innerHTML = `$${curStats.player.money}`;
-				checkMoney(curStats.player.money);
+		curStats.player.money += 200;
+		document.getElementById('player_money').innerHTML = `$${curStats.player.money}`;
+		checkMoney(curStats.player.money);
 
-				document.getElementById('bid').classList.remove('hidden');
-				continueGame = true;
-				bidClicked = false;
-			} else if (curStats.dealer.score === curStats.player.score) {
-				draw();
+		document.getElementById('bid').classList.remove('hidden');
+		continueGame = true;
+		bidClicked = false;
+	} else if (curStats.dealer.score > curStats.player.score) {
+		playerLost();
 
-				curStats.player.money += 100;
-				document.getElementById('player_money').innerHTML = `$${curStats.player.money}`;
+		if (curStats.player.money > 0) {
+			document.getElementById('bid').classList.remove('hidden');
+			continueGame = true;
+			bidClicked = false;
+		}
+	} else if (curStats.dealer.score < curStats.player.score) {
+		playerWon();
 
-				checkMoney(curStats.player.money);
+		if (curStats.player.score === 21 && values.table.player.length === 2)
+			curStats.player.money += 300;
+		else
+			curStats.player.money += 200;
 
-				document.getElementById('bid').classList.remove('hidden');
-				continueGame = true;
-				bidClicked = false;
-			}
-		}, 100);
+		document.getElementById('player_money').innerHTML = `$${curStats.player.money}`;
+		checkMoney(curStats.player.money);
+
+		document.getElementById('bid').classList.remove('hidden');
+		continueGame = true;
+		bidClicked = false;
+	} else if (curStats.dealer.score === curStats.player.score) {
+		draw();
+
+		curStats.player.money += 100;
+		document.getElementById('player_money').innerHTML = `$${curStats.player.money}`;
+
+		checkMoney(curStats.player.money);
+
+		document.getElementById('bid').classList.remove('hidden');
+		continueGame = true;
+		bidClicked = false;
 	}
 });
