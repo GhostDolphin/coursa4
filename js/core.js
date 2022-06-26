@@ -134,35 +134,12 @@ const action = (deck, cards, section) => {
 // DOM-OPERATING FUNCTIONS \\
 
 const showHidden = cards => {
-	const cardId = document.getElementsByClassName('hidden')[0].id,
-	hiddenCard = cards.filter((card) => card.id === cardId)[0],
+	const hidCard = document.querySelector('.card.hidden'),
+	hiddenCard = cards.filter((card) => card.id === hidCard.id)[0],
 	className = parseCardClass(false, hiddenCard);
 
-	document.getElementById(cardId).classList.remove('hidden');
-	document.getElementById(cardId).className += className;
-};
-
-const playerLost = () => {
-	document.getElementById('hit').classList.add('hidden');
-	document.getElementById('stand').classList.add('hidden');
-	document.getElementById('player_score').classList.add('lost');
-	document.getElementById('dealer_score').classList.add('won');
-};
-
-const playerWon = () => {
-	document.getElementById('hit').classList.add('hidden');
-	document.getElementById('stand').classList.add('hidden');
-	document.getElementById('player_score').classList.add('won');
-	document.getElementById('dealer_score').classList.add('lost');
-};
-
-const draw = () => {
-	document.getElementById('hit').classList.add('hidden');
-	document.getElementById('stand').classList.add('hidden');
-	document.getElementById('player_score').classList.remove('won');
-	document.getElementById('player_score').classList.remove('lost');
-	document.getElementById('dealer_score').classList.remove('won');
-	document.getElementById('dealer_score').classList.remove('lost');
+	hidCard.classList.remove('hidden');
+	hidCard.className += className;
 };
 
 const checkMoney = money => {
@@ -186,11 +163,10 @@ const checkMoney = money => {
 document.getElementById('bid').addEventListener('click', async () => {
 	if (!bidClicked && curStats.player.money > 0) {
 		bidClicked = true;
-		document.getElementById('bid').classList.add('hidden');
-		document.getElementById('player_score').classList.remove('won');
-		document.getElementById('player_score').classList.remove('lost');
-		document.getElementById('dealer_score').classList.remove('won');
-		document.getElementById('dealer_score').classList.remove('lost');
+		document.querySelector('.playboard').classList.remove('finished');
+		document.querySelector('.playboard').classList.remove('playerLost');
+		document.querySelector('.playboard').classList.remove('dealerLost');
+		document.querySelector('.playboard').classList.remove('draw');
 
 		const cardsAll = defCards(),
 		curDeck = shuffle(cardsAll);
@@ -229,8 +205,7 @@ document.getElementById('bid').addEventListener('click', async () => {
 		document.getElementById('player_score').innerHTML = curStats.player.score;
 		document.getElementById('dealer_score').innerHTML = '?';
 
-		document.getElementById('hit').classList.remove('hidden');
-		document.getElementById('stand').classList.remove('hidden');
+		document.querySelector(".playboard").classList.remove('finished');
 
 		firstDone = true;
 	}
@@ -242,6 +217,10 @@ document.getElementById('hit').addEventListener('click', async () => {
 	}
 
 	const result = action(values.leftInDeck, values.table.player, 'player');
+	values = {
+	...values,
+	...result
+	};
 
 	curStats.player.score = countScore(result.cards);
 
@@ -251,7 +230,8 @@ document.getElementById('hit').addEventListener('click', async () => {
 
 	if (curStats.player.score > 21) {
 		showHidden(values.table.dealer);
-		playerLost();
+		document.querySelector('.playboard').classList.add('finished');
+		document.querySelector('.playboard').classList.add('playerLost');
 
 		document.getElementById('dealer_score').innerHTML = curStats.dealer.score;
 
@@ -283,12 +263,17 @@ document.getElementById('stand').addEventListener('click', async () => {
 	while (curStats.dealer.score < 17) {
 		count++;
 		result = action(values.leftInDeck, values.table.dealer, 'dealer');
+		values = {
+		...values,
+		...result
+		};
 		curStats.dealer.score = countScore(result.cards);
 		document.getElementById('dealer_score').innerHTML = curStats.dealer.score;
 	}
 	
 	if (curStats.dealer.score > 21) {
-		playerWon();
+		document.querySelector('.playboard').classList.add('finished');
+		document.querySelector('.playboard').classList.add('dealerLost');
 
 		curStats.player.money += 200;
 		document.getElementById('player_money').innerHTML = `$${curStats.player.money}`;
@@ -320,7 +305,8 @@ document.getElementById('stand').addEventListener('click', async () => {
 		continueGame = true;
 		bidClicked = false;
 	} else if (curStats.dealer.score === curStats.player.score) {
-		draw();
+		document.querySelector('.playboard').classList.add('finished');
+		document.querySelector('.playboard').classList.add('draw');
 
 		curStats.player.money += 100;
 		document.getElementById('player_money').innerHTML = `$${curStats.player.money}`;
