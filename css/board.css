@@ -40,15 +40,14 @@ table.playboard tr.panel table.info tr.labels {
 table.playboard tr.panel table.info tr.values td {
 	color: #919191;
 }
-table.playboard tr.panel table.info tr.values td.lost {
+
+td#player_money.lost {
 	color: #c23838;
 }
-table.playboard tr.panel table.info tr.values td.won {
+td#player_money.won {
 	color: #38c251;
 }
-table.playboard tr.panel table.info tr.values td.draw {
-	color: #ded957;
-}
+
 table.playboard tr.panel table.info td {
 	width: 33%;
 }
@@ -74,13 +73,9 @@ table.playboard tr.buttons div.button {
 	cursor: pointer;
 	transition: all 0.25s ease-in-out;
 }
-table.playboard tr.buttons div.button:not(.hidden):hover {
+table.playboard:not(.playerLost) tr.buttons div.button:hover, table.playboard:not(.dealerLost) tr.buttons div.button:hover {
 	box-shadow: #fff 0 0 0 0.15vw, #fff 0 0 0.25vw 0.15vw;
 	text-shadow: #fff 0 0 0.25vw;
-}
-table.playboard tr.buttons div.button.hidden {
-	cursor: default;
-	opacity: 0.5;
 }
 
 
@@ -104,4 +99,41 @@ div.chip {
 div.chip > div.sum {
 	margin-top: 2vw;
 	position: relative;
+}
+
+
+table.playboard:not(.finished) #bid {
+	cursor: default;
+	opacity: 0.5;
+}
+
+table.playboard.finished #hit {
+	cursor: default;
+	opacity: 0.5;
+}
+table.playboard.finished #stand {
+	cursor: default;
+	opacity: 0.5;
+}
+
+table.playboard.playerLost #player_score {
+	color: #c23838;
+}
+table.playboard.playerLost #dealer_score {
+	color: #38c251;
+}
+
+
+table.playboard.draw #player_score {
+	color: #ded957;
+}
+table.playboard.draw #dealer_score {
+	color: #ded957;
+}
+
+table.playboard.dealerLost #player_score {
+	color: #38c251;
+}
+table.playboard.dealerLost #dealer_score {
+	color: #c23838;
 }
