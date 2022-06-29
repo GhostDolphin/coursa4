@@ -133,6 +133,10 @@ const action = (deck, cards, section) => {
 
 // SIMPLIFYING FUNCTIONS \\
 
+const setScore = (stats, side, type) => { document.getElementById(`${side}_score`).innerHTML = stats[side].score };
+
+const setMoney = stats => { document.getElementById(`player_money`).innerHTML = `$${stats.player.money}` };
+
 const finishGame = result => {
 	document.querySelector('.playboard').classList.add('finished');
 	document.querySelector('.playboard').classList.add(result);
@@ -212,15 +216,15 @@ document.getElementById('bid').addEventListener('click', async () => {
 		curStats.player.score = countScore(values.table.player);
 		curStats.player.money -= 100;
 		document.getElementById('chip').innerHTML = '$100';
-		document.getElementById('player_money').innerHTML = `$${curStats.player.money}`;
+		setMoney(curStats);
 		checkMoney(curStats.player.money);
 
 		curStats.dealer.score = countScore(values.table.dealer);
 
 		await delay((1000 * values.counter) + 500);
 
-		document.getElementById('player_score').innerHTML = curStats.player.score;
-		document.getElementById('dealer_score').innerHTML = '?';
+		setScore(curStats, 'player');
+		setScore({dealer: {score: '?'}}, 'dealer');
 
 		document.querySelector(".playboard").classList.remove('finished');
 
@@ -243,14 +247,14 @@ document.getElementById('hit').addEventListener('click', async () => {
 
 	await delay(100);
 
-	document.getElementById('player_score').innerHTML = curStats.player.score;
+	setScore(curStats, 'player');
 
 	if (curStats.player.score > 21) {
 		showHidden(values.table.dealer);
 		
 		finishGame('playerLost');
 
-		document.getElementById('dealer_score').innerHTML = curStats.dealer.score;
+		setScore(curStats, 'dealer');
 
 		firstDone = false;
 
@@ -272,7 +276,7 @@ document.getElementById('stand').addEventListener('click', async () => {
 	await delay(100);
 
 	showHidden(values.table.dealer);
-	document.getElementById('dealer_score').innerHTML = curStats.dealer.score;
+	setScore(curStats, 'dealer');
 
 	let count,
 	result;
@@ -284,15 +288,16 @@ document.getElementById('stand').addEventListener('click', async () => {
 		...values,
 		...result
 		};
+
 		curStats.dealer.score = countScore(result.cards);
-		document.getElementById('dealer_score').innerHTML = curStats.dealer.score;
+		setScore(curStats, 'dealer');
 	}
 	
 	if (curStats.dealer.score > 21) {
 		finishGame('dealerLost');
 
 		curStats.player.money += 200;
-		document.getElementById('player_money').innerHTML = `$${curStats.player.money}`;
+		setMoney(curStats);
 		checkMoney(curStats.player.money);
 
 		document.getElementById('bid').classList.remove('hidden');
@@ -314,7 +319,7 @@ document.getElementById('stand').addEventListener('click', async () => {
 		else
 			curStats.player.money += 200;
 
-		document.getElementById('player_money').innerHTML = `$${curStats.player.money}`;
+		setMoney(curStats);
 		checkMoney(curStats.player.money);
 
 		document.getElementById('bid').classList.remove('hidden');
@@ -324,7 +329,7 @@ document.getElementById('stand').addEventListener('click', async () => {
 		finishGame('draw');
 
 		curStats.player.money += 100;
-		document.getElementById('player_money').innerHTML = `$${curStats.player.money}`;
+		setMoney(curStats);
 
 		checkMoney(curStats.player.money);
 
