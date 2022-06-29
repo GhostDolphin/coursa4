@@ -140,6 +140,10 @@ const setMoney = stats => { document.getElementById(`player_money`).innerHTML = 
 const finishGame = result => {
 	document.querySelector('.playboard').classList.add('finished');
 	document.querySelector('.playboard').classList.add(result);
+	document.getElementById('bid').classList.remove('hidden');
+
+	continueGame = true;
+	bidClicked = false;
 };
 
 
@@ -251,18 +255,15 @@ document.getElementById('hit').addEventListener('click', async () => {
 
 	if (curStats.player.score > 21) {
 		showHidden(values.table.dealer);
-		
-		finishGame('playerLost');
 
 		setScore(curStats, 'dealer');
 
 		firstDone = false;
 
-		if (curStats.player.money > 0) {
-			document.getElementById('bid').classList.remove('hidden');
-			continueGame = true;
-			bidClicked = false;
-		}
+		finishGame('playerLost');
+
+		if (curStats.player.money < 100)
+			document.getElementById('bid').classList.add('hidden');
 	}
 });
 
@@ -294,26 +295,17 @@ document.getElementById('stand').addEventListener('click', async () => {
 	}
 	
 	if (curStats.dealer.score > 21) {
-		finishGame('dealerLost');
-
 		curStats.player.money += 200;
 		setMoney(curStats);
 		checkMoney(curStats.player.money);
 
-		document.getElementById('bid').classList.remove('hidden');
-		continueGame = true;
-		bidClicked = false;
+		finishGame('dealerLost');
 	} else if (curStats.dealer.score > curStats.player.score) {
 		finishGame('playerLost');
 
-		if (curStats.player.money > 0) {
-			document.getElementById('bid').classList.remove('hidden');
-			continueGame = true;
-			bidClicked = false;
-		}
+		if (curStats.player.money < 100)
+			document.getElementById('bid').classList.add('hidden');
 	} else if (curStats.dealer.score < curStats.player.score) {
-		finishGame('dealerLost');
-
 		if (curStats.player.score === 21 && values.table.player.length === 2)
 			curStats.player.money += 300;
 		else
@@ -322,19 +314,13 @@ document.getElementById('stand').addEventListener('click', async () => {
 		setMoney(curStats);
 		checkMoney(curStats.player.money);
 
-		document.getElementById('bid').classList.remove('hidden');
-		continueGame = true;
-		bidClicked = false;
+		finishGame('dealerLost');
 	} else if (curStats.dealer.score === curStats.player.score) {
-		finishGame('draw');
-
 		curStats.player.money += 100;
 		setMoney(curStats);
 
 		checkMoney(curStats.player.money);
 
-		document.getElementById('bid').classList.remove('hidden');
-		continueGame = true;
-		bidClicked = false;
+		finishGame('draw');
 	}
 });
