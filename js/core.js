@@ -131,37 +131,16 @@ const action = (deck, cards, section) => {
 
 
 
-// SIMPLIFYING FUNCTIONS \\
-
-const setScore = (stats, side, type) => { document.getElementById(`${side}_score`).innerHTML = stats[side].score };
-
-const setMoney = stats => { document.getElementById(`player_money`).innerHTML = `$${stats.player.money}` };
-
-const finishGame = result => {
-	document.querySelector('.playboard').classList.add('finished');
-	document.querySelector('.playboard').classList.add(result);
-	document.getElementById('bid').classList.remove('hidden');
-
-	continueGame = true;
-	bidClicked = false;
-};
-
-
 // DOM-OPERATING FUNCTIONS \\
 
-const resetVisuals = () => {
-	document.querySelector('.playboard').classList.remove('finished');
-	document.querySelector('.playboard').classList.remove('playerLost');
-	document.querySelector('.playboard').classList.remove('dealerLost');
-	document.querySelector('.playboard').classList.remove('draw');
-}
+const resetVisuals = () => { document.querySelector('.playboard').classList.remove('finished', 'playerLost', 'dealerLost', 'draw') };
 
 const resetBid = () => {
 	document.getElementById('dealer_cards').innerHTML = '';
 	document.getElementById('player_cards').innerHTML = '';
 	document.getElementById('player_score').innerHTML = 0;
 	document.getElementById('dealer_score').innerHTML = 0;
-}
+};
 
 const showHidden = cards => {
 	const hidCard = document.querySelector('.card.hidden'),
@@ -188,6 +167,46 @@ const checkMoney = money => {
 
 
 
+// SIMPLIFYING FUNCTIONS \\
+
+const setScore = (stats, side, type) => { document.getElementById(`${side}_score`).innerHTML = stats[side].score };
+
+const setMoney = stats => { document.getElementById(`player_money`).innerHTML = `$${stats.player.money}` };
+
+const isDraw = stats => stats.dealer.score === stats.player.score ? true : false;
+
+const isPlayerWin = stats => (stats.dealer.score > 21 || stats.dealer.score < stats.player.score) ? true : false;
+
+const isDealerWin = stats => stats.dealer.score > stats.player.score ? true : false;
+
+const defineProfit = (stats, len) => (stats.player.score === 21 && len === 2) ? 300 : 200 ;
+
+const operateMoney = stats => {
+	setMoney(stats);
+	checkMoney(stats.player.money);
+};
+
+const finishGame = result => {
+	document.querySelector('.playboard').classList.add('finished');
+	document.querySelector('.playboard').classList.add(result);
+	document.getElementById('bid').classList.remove('hidden');
+
+	continueGame = true;
+	bidClicked = false;
+};
+
+const createCard = (id, side) => {
+	const newCard = document.createElement('table');
+
+	newCard.id = id;
+	newCard.className = 'card';
+	newCard.innerHTML = CARD_TEMPLATE;
+
+	document.getElementsByClassName(side)[0].appendChild(newCard);
+};
+
+
+
 // EVENTS \\
 
 document.getElementById('bid').addEventListener('click', async () => {
@@ -203,15 +222,8 @@ document.getElementById('bid').addEventListener('click', async () => {
 			resetBid();
 
 			for (const side in ALWAYS_FIRST) {
-				for (const idOfFirst of ALWAYS_FIRST[side]) {
-					const newCard = document.createElement('table');
-
-					newCard.id = idOfFirst;
-					newCard.className = 'card';
-					newCard.innerHTML = CARD_TEMPLATE;
-
-					document.getElementsByClassName(side)[0].appendChild(newCard);
-				}
+				for (const idOfFirst of ALWAYS_FIRST[side])
+					createCard(idOfFirst, side);
 			}
 		}
 
@@ -294,32 +306,19 @@ document.getElementById('stand').addEventListener('click', async () => {
 		setScore(curStats, 'dealer');
 	}
 	
-	if (curStats.dealer.score > 21) {
-		curStats.player.money += 200;
-		setMoney(curStats);
-		checkMoney(curStats.player.money);
+	if (isPlayerWin(curStats)) {
+		curStats.player.money += defineProfit(curStats, values.table.player.length);
+		operateMoney(curStats);
 
 		finishGame('dealerLost');
-	} else if (curStats.dealer.score > curStats.player.score) {
+	} else if (isDealerWin(curStats)) {
 		finishGame('playerLost');
 
 		if (curStats.player.money < 100)
 			document.getElementById('bid').classList.add('hidden');
-	} else if (curStats.dealer.score < curStats.player.score) {
-		if (curStats.player.score === 21 && values.table.player.length === 2)
-			curStats.player.money += 300;
-		else
-			curStats.player.money += 200;
-
-		setMoney(curStats);
-		checkMoney(curStats.player.money);
-
-		finishGame('dealerLost');
-	} else if (curStats.dealer.score === curStats.player.score) {
+	} else if (isDraw(curStats)) {
 		curStats.player.money += 100;
-		setMoney(curStats);
-
-		checkMoney(curStats.player.money);
+		operateMoney(curStats);
 
 		finishGame('draw');
 	}
